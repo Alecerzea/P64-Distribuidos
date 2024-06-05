@@ -3,36 +3,30 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ServidorTCP {
-    private ServerSocket serverSocket;
+    public static void main(String[] args) {
+        final int PUERTO = 12345;
+        ServerSocket servidor = null;
 
-    public ServidorTCP(int puerto) throws IOException {
-        serverSocket = new ServerSocket(puerto);
-        System.out.println("Servidor TCP iniciado en el puerto " + puerto);
-    }
+        try {
+            servidor = new ServerSocket(PUERTO);
+            System.out.println("Servidor TCP iniciado en el puerto " + PUERTO);
 
-    public void aceptarClientes() {
-        while (true) {
-            try {
-                Socket clienteSocket = serverSocket.accept();
-                System.out.println("Nuevo cliente conectado: " + clienteSocket.getInetAddress().getHostAddress());
-
-                // Aquí puedes manejar la comunicación con el cliente en un hilo separado
-                Thread clienteThread = new Thread(new ManejadorCliente(clienteSocket));
-                clienteThread.start();
-            } catch (IOException e) {
-                e.printStackTrace();
+            while (true) {
+                Socket cliente = servidor.accept();
+                System.out.println("Cliente conectado desde " + cliente.getInetAddress().getHostAddress());
+                ManejadorCliente manejador = new ManejadorCliente(cliente);
+                manejador.start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (servidor != null) {
+                try {
+                    servidor.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
-
-    public static void main(String[] args) {
-        int puerto = 1234; // Cambia este puerto según tus necesidades
-        try {
-            ServidorTCP servidor = new ServidorTCP(puerto);
-            servidor.aceptarClientes();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
-

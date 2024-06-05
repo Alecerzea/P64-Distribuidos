@@ -4,38 +4,26 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class ManejadorCliente implements Runnable {
+public class ManejadorCliente extends Thread {
     private Socket clienteSocket;
-    private PrintWriter salida;
-    private BufferedReader entrada;
 
-    public ManejadorCliente(Socket socket) throws IOException {
-        clienteSocket = socket;
-        salida = new PrintWriter(clienteSocket.getOutputStream(), true);
-        entrada = new BufferedReader(new InputStreamReader(clienteSocket.getInputStream()));
+    public ManejadorCliente(Socket clienteSocket) {
+        this.clienteSocket = clienteSocket;
     }
 
-    @Override
     public void run() {
-        try {
-            String mensajeCliente;
-            while ((mensajeCliente = entrada.readLine()) != null) {
-                // Aquí puedes procesar el mensaje recibido del cliente
-                System.out.println("Mensaje recibido de " + clienteSocket.getInetAddress().getHostAddress() + ": " + mensajeCliente);
-
-                // Ejemplo de enviar una respuesta al cliente
-                salida.println("Mensaje recibido: " + mensajeCliente);
+        try (
+            PrintWriter out = new PrintWriter(clienteSocket.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(clienteSocket.getInputStream()))
+        ) {
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                System.out.println("Mensaje recibido de " + clienteSocket.getInetAddress().getHostAddress() + ": " + inputLine);
+                out.println("Mensaje recibido: " + inputLine);
             }
+            clienteSocket.close();
         } catch (IOException e) {
-            System.out.println("Cliente desconectado: " + clienteSocket.getInetAddress().getHostAddress());
-        } finally {
-            try {
-                salida.close();
-                entrada.close();
-                clienteSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
         }
     }
 }
