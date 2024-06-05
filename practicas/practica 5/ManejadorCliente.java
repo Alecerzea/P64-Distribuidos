@@ -3,12 +3,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ManejadorCliente extends Thread {
     private Socket clienteSocket;
+    private ReentrantLock lock;
+    private Condition condition;
 
-    public ManejadorCliente(Socket clienteSocket) {
+    public ManejadorCliente(Socket clienteSocket, ReentrantLock lock, Condition condition) {
         this.clienteSocket = clienteSocket;
+        this.lock = lock;
+        this.condition = condition;
+    }
+
+    public ManejadorCliente(Socket cliente) {
+        //TODO Auto-generated constructor stub
     }
 
     public void run() {
@@ -18,8 +28,14 @@ public class ManejadorCliente extends Thread {
         ) {
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-                System.out.println("Mensaje recibido de " + clienteSocket.getInetAddress().getHostAddress() + ": " + inputLine);
-                out.println("Mensaje recibido: " + inputLine);
+                lock.lock();
+                try {
+                    System.out.println("Mensaje recibido de " + clienteSocket.getInetAddress().getHostAddress() + ": " + inputLine);
+                    out.println("Mensaje recibido: " + inputLine);
+                    condition.signalAll();
+                } finally {
+                    lock.unlock();
+                }
             }
             clienteSocket.close();
         } catch (IOException e) {
@@ -27,3 +43,4 @@ public class ManejadorCliente extends Thread {
         }
     }
 }
+
