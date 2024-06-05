@@ -4,7 +4,7 @@ import java.net.Socket;
 
 public class ServidorTCP {
     public static void main(String[] args) {
-        final int PUERTO = 12345;
+        final int PUERTO = 22;
         ServerSocket servidor = null;
 
         try {

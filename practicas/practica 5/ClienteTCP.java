@@ -7,7 +7,7 @@ import java.net.Socket;
 public class ClienteTCP {
     public static void main(String[] args) {
         final String SERVIDOR = "localhost";
-        final int PUERTO = 12345;
+        final int PUERTO = 22;
 
         try (
             Socket socket = new Socket(SERVIDOR, PUERTO);
