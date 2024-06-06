@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.concurrent.locks.*;
 
 public class ServidorTCP {
-    private static final int PUERTO = 2024;
+    private static final int PUERTO = 22;
     private static List<PrintWriter> salidasClientes = new ArrayList<>();
     private static ReentrantLock lock = new ReentrantLock();
     private static Condition noMensajes = lock.newCondition();

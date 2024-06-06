@@ -3,7 +3,7 @@ import java.net.*;
 
 public class ClienteTCP {
     private static final String SERVIDOR_IP = "localhost";
-    private static final int PUERTO = 2024;
+    private static final int PUERTO = 22;
 
     public static void main(String[] args) {
         try {
