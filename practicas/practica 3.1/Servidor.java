@@ -16,7 +16,7 @@ public class Servidor {
             try {
                 Socket socket = serverSocket.accept();
                 System.out.println("Conexión establecida con un cliente");
-                ClienteHilo clienteHilo = new ClienteHilo(socket);
+                ClienteHilo clienteHilo = new ClienteHilo(socket, personas);
                 clienteHilo.start();
             } catch (IOException e) {
                 System.err.println("Error al aceptar conexión: " + e.getMessage());
@@ -33,11 +33,13 @@ public class Servidor {
         }
     }
 
-    private class ClienteHilo extends Thread {
+    private static class ClienteHilo extends Thread {
         private Socket socket;
+        private List<Persona> personas;
 
-        public ClienteHilo(Socket socket) {
+        public ClienteHilo(Socket socket, List<Persona> personas) {
             this.socket = socket;
+            this.personas = personas;
         }
 
         @Override
