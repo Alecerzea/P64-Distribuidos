@@ -6,7 +6,7 @@ import java.util.concurrent.locks.*;
 
 public class ServidorTCP {
     private static final int PUERTO = 22;
-    private static List<PrintWriter> salidasClientes = new ArrayList<>();
+    private static List<ObjectOutputStream> salidasClientes = new ArrayList<>();
     private static ReentrantLock lock = new ReentrantLock();
     private static Condition noMensajes = lock.newCondition();
 
@@ -21,11 +21,8 @@ public class ServidorTCP {
                 Socket cliente = servidor.accept();
                 System.out.println("Cliente conectado desde: " + cliente.getInetAddress());
 
-                PrintWriter salida = new PrintWriter(cliente.getOutputStream(), true);
-
-                BufferedReader entrada = new BufferedReader(new InputStreamReader(cliente.getInputStream()));
-                String nombreCliente = entrada.readLine(); // Leer nombre del cliente
-                System.out.println("Cliente " + nombreCliente + " conectado desde: " + cliente.getInetAddress());
+                ObjectOutputStream salida = new ObjectOutputStream(cliente.getOutputStream());
+                ObjectInputStream entrada = new ObjectInputStream(cliente.getInputStream());
 
                 lock.lock();
                 try {
@@ -35,7 +32,7 @@ public class ServidorTCP {
                 }
 
                 // Iniciar un hilo para manejar la comunicación con el cliente
-                Thread thread = new Thread(new ManejadorCliente(cliente, salida));
+                Thread thread = new Thread(new ManejadorCliente(cliente, salida, entrada));
                 thread.start();
             }
         } catch (IOException e) {
@@ -53,57 +50,41 @@ public class ServidorTCP {
 
     static class ManejadorCliente implements Runnable {
         private Socket cliente;
-        private PrintWriter salida;
-        private BufferedReader entrada;
-        private String nombreCliente;
+        private ObjectOutputStream salida;
+        private ObjectInputStream entrada;
 
-        public ManejadorCliente(Socket cliente, PrintWriter salida) {
+        public ManejadorCliente(Socket cliente, ObjectOutputStream salida, ObjectInputStream entrada) {
             this.cliente = cliente;
             this.salida = salida;
-            try {
-                this.entrada = new BufferedReader(new InputStreamReader(cliente.getInputStream()));
-                this.nombreCliente = entrada.readLine(); // Leer nombre del cliente
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            this.entrada = entrada;
         }
 
         @Override
         public void run() {
             try {
-                String mensaje;
-                while ((mensaje = entrada.readLine()) != null) {
-                    System.out.println("Mensaje recibido de " + nombreCliente + ": " + mensaje);
+                while (true) {
+                    CustomObject objetoRecibido = (CustomObject) entrada.readObject();
+                    System.out.println("Mensaje recibido de " + objetoRecibido.getName() + ": " + objetoRecibido.getMessage());
 
                     // Enviar respuesta al cliente
-                    String respuesta = "Respuesta del servidor a " + nombreCliente + ": " + mensaje;
-                    salida.println(respuesta);
+                    CustomObject objetoEnviar = new CustomObject("Servidor", "Respuesta del servidor a " + objetoRecibido.getName() + ": " + objetoRecibido.getMessage());
+                    salida.writeObject(objetoEnviar);
 
                     // Enviar el mensaje a todos los clientes
                     lock.lock();
                     try {
-                        for (PrintWriter salidaCliente : salidasClientes) {
+                        for (ObjectOutputStream salidaCliente : salidasClientes) {
                             if (salidaCliente != salida) {
-                                salidaCliente.println(nombreCliente + ": " + mensaje);
+                                salidaCliente.writeObject(objetoEnviar);
                             }
                         }
                     } finally {
                         lock.unlock();
                     }
                 }
-
-                // Cerrar la conexión cuando el cliente se desconecta
-                lock.lock();
-                try {
-                    salidasClientes.remove(salida);
-                } finally {
-                    lock.unlock();
-                }
-                cliente.close();
-            } catch (IOException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
     }
 }
-

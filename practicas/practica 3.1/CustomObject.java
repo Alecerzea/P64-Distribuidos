@@ -4,9 +4,9 @@ public class CustomObject implements Serializable {
     private String name;
     private int value;
 
-    public CustomObject(String name, int value) {
+    public CustomObject(String name, String string) {
         this.name = name;
-        this.value = value;
+        this.value = string;
     }
 
     public String getName() {
@@ -23,5 +23,10 @@ public class CustomObject implements Serializable {
                 "name='" + name + '\'' +
                 ", value=" + value +
                 '}';
+    }
+
+    public String getMessage() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getMessage'");
     }
 }
