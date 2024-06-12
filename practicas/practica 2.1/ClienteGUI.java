@@ -17,6 +17,8 @@ public class ClienteGUI {
     private JTextField puertoField;
     private JTextField mensajeField;
     private JTextArea mensajesArea;
+    private JLabel connectionStatus;
+    private JButton disconnectButton;
     private PrintWriter out_socket;
     private BufferedReader in_socket;
 
@@ -26,10 +28,26 @@ public class ClienteGUI {
         frame.setSize(400, 400);
 
         ipField = new JTextField(15);
+        ipField.setFont(new Font("Arial", Font.BOLD, 14));
+        ipField.setForeground(Color.BLUE);
+
         puertoField = new JTextField(5);
+
         mensajeField = new JTextField(20);
+        mensajeField.setBackground(Color.WHITE);
+        mensajeField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
         JButton conectarButton = new JButton("Conectar");
         JButton enviarButton = new JButton("Enviar");
+
+        connectionStatus = new JLabel("Desconectado");
+        disconnectButton = new JButton("Desconectar");
+        disconnectButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Disconnect from the server
+            }
+        });
+
         mensajesArea = new JTextArea();
         mensajesArea.setEditable(false);
 
@@ -45,9 +63,28 @@ public class ClienteGUI {
         mensajePanel.add(mensajeField);
         mensajePanel.add(enviarButton);
 
-        frame.getContentPane().add(BorderLayout.NORTH, panel);
-        frame.getContentPane().add(BorderLayout.CENTER, new JScrollPane(mensajesArea));
-        frame.getContentPane().add(BorderLayout.SOUTH, mensajePanel);
+        JPanel statusPanel = new JPanel();
+        statusPanel.add(connectionStatus);
+        statusPanel.add(disconnectButton);
+
+        frame.getContentPane().setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        frame.getContentPane().add(panel, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        frame.getContentPane().add(new JScrollPane(mensajesArea), gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        frame.getContentPane().add(mensajePanel, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        frame.getContentPane().add(statusPanel, gbc);
 
         conectarButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -75,6 +112,7 @@ public class ClienteGUI {
             out_socket = new PrintWriter(out_writer, true);
 
             mensajesArea.append("Conexión exitosa con el servidor.\n");
+            connectionStatus.setText("Conectado");
 
             new Thread(() -> {
                 try {
