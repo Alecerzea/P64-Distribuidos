@@ -2,7 +2,7 @@ import java.io.Serializable;
 
 public class CustomObject implements Serializable {
     private String name;
-    private int value;
+    private String value;
 
     public CustomObject(String name, String string) {
         this.name = name;
@@ -13,7 +13,7 @@ public class CustomObject implements Serializable {
         return name;
     }
 
-    public int getValue() {
+    public String getValue() {
         return value;
     }
 
