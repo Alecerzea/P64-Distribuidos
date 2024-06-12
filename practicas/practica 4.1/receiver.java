@@ -3,13 +3,14 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.Scanner;
 
-public class Receiver {
+public class receiver {
 
     public static final int PORT = 2020;
     public static final int BUFFER_SIZE = 1500;
 
-    public Receiver() {
+    public receiver() {
         try {
             DatagramSocket socket = new DatagramSocket(PORT);
             System.out.println("Receiver se encuentra funcionando.");
@@ -40,6 +41,6 @@ public class Receiver {
     }
 
     public static void main(String[] args) {
-        Receiver objeto = new Receiver();
+        receiver objeto = new receiver();
     }
 }
