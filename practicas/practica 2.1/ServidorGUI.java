@@ -8,7 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import javax.swing.*;
 
-public class ServidorGUI {
+public class ServidorGUI extends JFrame{
 
     private JFrame frame;
     private JTextArea mensajesArea;
@@ -23,9 +23,9 @@ public class ServidorGUI {
     private Socket socket;
 
     public ServidorGUI() {
-        frame = new JFrame("Servidor");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 400);
+        setTitle("Servidor");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(400, 400);
 
         mensajesArea = new JTextArea();
         mensajesArea.setEditable(false);
@@ -51,26 +51,26 @@ public class ServidorGUI {
         JPanel statusPanel = new JPanel();
         statusPanel.add(connectionStatus);
 
-        frame.getContentPane().setLayout(new GridBagLayout());
+        getContentPane().setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        frame.getContentPane().add(panel, gbc);
+        getContentPane().add(panel, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        frame.getContentPane().add(new JScrollPane(mensajesArea), gbc);
+        getContentPane().add(new JScrollPane(mensajesArea), gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
-        frame.getContentPane().add(mensajePanel, gbc);
+        getContentPane().add(mensajePanel, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-        frame.getContentPane().add(statusPanel, gbc);
+        getContentPane().add(statusPanel, gbc);
 
-        frame.setVisible(true);
+        setVisible(true);
     }
 
     public void conectar() {
