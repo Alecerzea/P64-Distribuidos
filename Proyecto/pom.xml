@@ -1,7 +1,0 @@
-<dependencies>
-    <dependency>
-        <groupId>org.primefaces</groupId>
-        <artifactId>primefaces</artifactId>
-        <version>10.0.0</version>
-    </dependency>
-</dependencies>
