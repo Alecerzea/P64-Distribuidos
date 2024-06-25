@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
+-->
+
+<html>
+    <head>
+        <title>Welcome Students!</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            /* Add some colors and fonts to make it fun and kid-friendly */
+            body {
+                background-color: #f2f2f2; /* Light gray background */
+                font-family: Arial, sans-serif;
+            }
+            form {
+                width: 80%; /* Make the form take up most of the screen */
+                margin: 40px auto; /* Center the form */
+                padding: 20px; /* Add some padding around the form */
+                border: 1px solid #ccc; /* Add a light gray border */
+                border-radius: 10px; /* Add some rounded corners */
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+            }
+            h1 {
+                color: #00698f; /* Blue color for the title */
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+            input[type="text"] {
+                width: 100%; /* Make the text input take up the full width */
+                height: 30px; /* Make the text input a bit taller */
+                padding: 10px; /* Add some padding around the text input */
+                border: 1px solid #ccc; /* Add a light gray border */
+                border-radius: 5px; /* Add some rounded corners */
+            }
+            input[type="button"] {
+                background-color: #4CAF50; /* Green background for the button */
+                color: #fff; /* White text for the button */
+                width: 100%; /* Make the button take up the full width */
+                height: 30px; /* Make the button a bit taller */
+                padding: 10px; /* Add some padding around the button */
+                border: none; /* Remove the border */
+                border-radius: 5px; /* Add some rounded corners */
+                cursor: pointer; /* Change the cursor to a pointer on hover */
+            }
+            input[type="button"]:hover {
+                background-color: #3e8e41; /* Darker green background on hover */
+            }
+        </style>
+    </head>
+    <body>
+        <form name="frmIndex" action="svlPreguntas" method="POST">
+         <h1>BIENVENIDOS ESTUDIANTES!</h1>
+            <p>INGRESEN SUS NOMBRES Y APELLIDOS POR FAVOR</p>
+            <input type="text" name="txtNombreCliente" value="" size="50" />
+            <br>
+            <input type="button" value="INGRESAR AL EXAMEN" name="btnIngresarExamen" />
+        </form>
+    </body>
+</html>
