@@ -16,16 +16,18 @@ services:
       - MYSQL_PASSWORD=rootpassword
       - MYSQL_DATABASE=my_database
 
-  db:
-    image: mariadb:latest
-    container_name: mariadb
-    networks:
-      - red_app
-    environment:
-      - MYSQL_ROOT_PASSWORD=rootpassword
-      - MYSQL_DATABASE=my_database
-    volumes:
-      - db_data:/var/lib/mysql
+db:
+  image: mariadb:latest
+  container_name: mariadb
+  networks:
+    - red_app
+  environment:
+    - MYSQL_ROOT_PASSWORD=rootpassword
+    - MYSQL_DATABASE=my_database
+  volumes:
+    - db_data:/var/lib/mysql
+    - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
 
 networks:
   red_app:
