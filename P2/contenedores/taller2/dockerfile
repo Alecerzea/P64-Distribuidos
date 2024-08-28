@@ -1,0 +1,11 @@
+# Usar la imagen oficial de PHP con Apache
+FROM php:8.0-apache
+
+# Copiar los archivos de la aplicación al directorio raíz del contenedor
+COPY . /var/www/html/
+
+# Instalar las extensiones necesarias para MariaDB
+RUN docker-php-ext-install mysqli pdo pdo_mysql
+
+# Exponer el puerto 80
+EXPOSE 80
