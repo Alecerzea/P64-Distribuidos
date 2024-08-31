@@ -1,11 +1,22 @@
-# Usar la imagen oficial de PHP con Apache
-FROM php:8.0-apache
+# Dockerfile para aplicación PHP
 
-# Copiar los archivos de la aplicación al directorio raíz del contenedor
-COPY . /var/www/html/
+# Imagen base: PHP 7.4 con Apache
+FROM php:7.4-apache
 
-# Instalar las extensiones necesarias para MariaDB
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+# Establecer la variable de entorno para la aplicación
+ENV APP_HOME /var/www/html
 
-# Exponer el puerto 80
+# Copiar el código de la aplicación en el contenedor
+COPY . $APP_HOME
+
+# Exponer el puerto 80 para acceso a la aplicación
 EXPOSE 80
+
+# Instalar la extensión mysqli
+RUN docker-php-ext-install mysqli
+
+# Copiar el archivo init.sql en el contenedor
+COPY init.sql /docker-entrypoint-initdb.d/
+
+# Comando para ejecutar la aplicación
+CMD ["apache2-foreground"]
